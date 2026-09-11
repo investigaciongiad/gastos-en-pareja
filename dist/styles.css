@@ -2,6 +2,7 @@
 @layer base {
   :root { color-scheme: light; --ink:#243c35; --green:#214e42; --green-dark:#173d33; --muted:#718078; --paper:#f7f8f2; --line:#e2e7de; --peach:#f3dfd3; --mint:#dce9d8; --error:#a33c32; font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif; font-size:16px; }
   * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
   body { margin:0; color:var(--ink); background:var(--paper); -webkit-font-smoothing:antialiased; }
   button,input,select { font:inherit; }
   button { cursor:pointer; color:inherit; touch-action:manipulation; }
@@ -121,7 +122,7 @@
   .filter-row .field,.month-control { margin:0; }
   .month-control label { font-size:.8rem; margin-bottom:5px; }
   .month-control { width:205px; flex:none; }
-  .list-heading { display:flex; justify-content:space-between; gap:12px; padding:25px 0 15px; border-bottom:1px solid var(--line); color:var(--muted); font-size:.85rem; }
+  .list-heading { display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; padding:25px 0 15px; border-bottom:1px solid var(--line); color:var(--muted); font-size:.85rem; }
   .list-heading strong { color:var(--ink); }
   .expense-row { display:flex; align-items:center; gap:14px; padding:20px 0; border-bottom:1px solid var(--line); }
   .expense-row:last-child { border-bottom:0; }
@@ -209,7 +210,12 @@
     .expense-row { gap:10px; flex-wrap:wrap; align-items:flex-start; }
     .expense-row>.category-icon { width:32px; height:32px; }
     .expense-body { min-width:calc(100% - 45px); }
-    .expense-end { flex-basis:100%; flex-direction:row; justify-content:space-between; align-items:center; margin-left:42px; }
+    .expense-end { flex-basis:calc(100% - 42px); min-width:0; flex-direction:row; flex-wrap:wrap; gap:8px; justify-content:space-between; align-items:center; margin-left:42px; }
+    .expense-amount { white-space:normal; overflow-wrap:anywhere; min-width:0; }
+    .row-actions { flex:none; margin-left:auto; }
+    .filter-row>.field { min-width:0; }
+    .bar-label { flex-wrap:wrap; }
+    .summary-total-card>div { min-width:0; }
     .expense-meta { font-size:.76rem; }
     #view-summary .page-heading { align-items:flex-start; flex-wrap:wrap; }
     .month-control { width:100%; margin-top:4px; }

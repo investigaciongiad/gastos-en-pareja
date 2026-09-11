@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#214e42">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="El registro compartido de gastos de Lali Valentina y Óscar Iván.">
+  <title>Gastos en pareja · Lali y Óscar</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Ir al contenido</a>
+  <div class="shell">
+    <header class="header">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36"><rect x="6" y="8" width="16" height="21" rx="8"/><rect x="15" y="5" width="16" height="21" rx="8"/></svg></span><div><span class="brand-name">Gastos en pareja</span><span class="brand-caption">Lali Valentina & Óscar Iván</span></div></div>
+      <span id="connection" class="connection"><span></span><span id="connection-label">Conectando</span></span>
+    </header>
+
+    <div id="notice" class="notice" role="status" hidden><span id="notice-text"></span><button id="retry-connect" type="button" hidden>Reintentar</button></div>
+    <noscript><div class="notice">Activa JavaScript para usar la aplicación.</div></noscript>
+
+    <nav class="tabs" aria-label="Secciones" role="tablist">
+      <button class="tab active" id="tab-register" type="button" role="tab" aria-selected="true" aria-controls="view-register" data-view="register"><span data-icon="plus"></span>Registrar</button>
+      <button class="tab" id="tab-movements" type="button" role="tab" aria-selected="false" aria-controls="view-movements" data-view="movements" tabindex="-1"><span data-icon="list"></span>Movimientos</button>
+      <button class="tab" id="tab-summary" type="button" role="tab" aria-selected="false" aria-controls="view-summary" data-view="summary" tabindex="-1"><span data-icon="chart"></span>Resumen</button>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <section id="view-register" role="tabpanel" aria-labelledby="tab-register" tabindex="0">
+        <div class="page-heading"><div><p class="eyebrow">LAS CUENTAS, AL DÍA</p><h1 id="form-title">Un nuevo gasto</h1></div><span class="heading-date" id="today-label"></span></div>
+        <div class="register-layout">
+          <div class="card form-card">
+            <form id="expense-form" novalidate>
+              <fieldset class="payer-field"><legend>¿Quién pagó?</legend><div id="payer-options" class="payer-options"></div><p class="field-error" id="error-payer" hidden></p></fieldset>
+              <div class="field amount-field"><label for="amount">¿Cuánto pagó?</label><div class="amount-input"><span aria-hidden="true">$</span><input id="amount" name="amount" inputmode="numeric" autocomplete="off" placeholder="0" maxlength="15" aria-describedby="amount-hint error-amount"><span class="currency">COP</span></div><span class="field-hint" id="amount-hint">Pesos colombianos, sin centavos</span><p class="field-error" id="error-amount" hidden></p></div>
+              <div class="field"><label for="description">¿En qué gastó?</label><input id="description" name="description" type="text" placeholder="Ej. Mercado de la semana" maxlength="200" autocomplete="off" aria-describedby="error-description"><p class="field-error" id="error-description" hidden></p></div>
+              <fieldset class="category-field"><legend>Categoría</legend><div id="category-options" class="category-options"></div><p class="field-error" id="error-category" hidden></p></fieldset>
+              <div class="field date-field"><label for="date">Fecha del gasto</label><input id="date" name="date" type="date" min="1900-01-01" max="9999-12-31" aria-describedby="error-date"><p class="field-error" id="error-date" hidden></p></div>
+              <div id="form-message" class="form-message" role="alert" hidden></div>
+              <button id="reload-edit" class="text-button" type="button" hidden>Cargar la versión actual</button>
+              <div class="form-actions"><button id="save-button" class="primary-button" type="submit" disabled><span data-icon="plus"></span><span id="save-label">Guardar gasto</span><span data-icon="arrow" class="save-arrow"></span></button><button id="cancel-edit" class="secondary-button" type="button" hidden>Cancelar edición</button></div>
+              <p class="save-note"><span data-icon="cloud"></span>Guardado compartido con conexión a internet</p>
+            </form>
+          </div>
+          <aside class="register-aside" aria-label="Un vistazo al mes actual">
+            <section class="month-card"><div class="month-card-heading"><span>Este mes</span><span data-icon="chart"></span></div><p class="current-month-label"></p><p id="quick-total" class="big-total">—</p><span class="total-caption">gastado entre los dos</span><div id="quick-people" class="quick-people"></div><button class="summary-link" id="open-summary" type="button">Ver resumen del mes <span data-icon="arrow"></span></button></section>
+            <section class="recent-card"><div class="section-heading"><h2>Últimos gastos del mes</h2><span class="small-dot" aria-hidden="true"></span></div><div id="recent-list"></div></section>
+          </aside>
+        </div>
+      </section>
+
+      <section id="view-movements" role="tabpanel" aria-labelledby="tab-movements" tabindex="0" hidden>
+        <div class="page-heading"><div><p class="eyebrow">CADA PAGO, EN SU LUGAR</p><h1>Movimientos</h1></div></div>
+        <div class="card movements-card"><div class="filter-row"><div class="field"><label for="movement-month">Mes</label><input id="movement-month" type="month" min="1900-01" max="9999-12"></div><div class="field"><label for="filter-payer">Quién pagó</label><select id="filter-payer"><option value="">Los dos</option></select></div><div class="field"><label for="filter-category">Categoría</label><select id="filter-category"><option value="">Todas</option></select></div></div><div class="list-heading"><span id="movement-count">Cargando gastos…</span><strong id="filtered-total">—</strong></div><div id="expense-list"></div></div>
+      </section>
+
+      <section id="view-summary" role="tabpanel" aria-labelledby="tab-summary" tabindex="0" hidden>
+        <div class="page-heading"><div><p class="eyebrow">UNA MIRADA AL MES</p><h1>Resumen</h1></div><div class="field month-control"><label for="summary-month">Mes</label><input id="summary-month" type="month" min="1900-01" max="9999-12"></div></div>
+        <div class="summary-total-card"><div><p id="summary-month-label"></p><h2>Total gastado</h2><p id="summary-total" class="big-total">—</p></div><div class="summary-symbol" aria-hidden="true"><span data-icon="chart"></span></div><span id="summary-count" class="summary-count"></span></div>
+        <div class="summary-grid"><section class="card summary-section"><h2>Quién hizo los pagos</h2><p class="muted">Lo que pagó cada uno durante el mes.</p><div id="summary-people"></div><p class="small-note">Estos valores no representan deudas entre ustedes.</p></section><section class="card summary-section"><h2>En qué se fue</h2><p class="muted">Gastos por categoría</p><div id="category-bars"></div></section></div>
+      </section>
+    </main>
+    <footer>Lali & Óscar <span aria-hidden="true">·</span> Gastos en pareja</footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden><span data-icon="check"></span><span id="toast-text"></span></div>
+  <dialog id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description"><div class="dialog-icon" data-icon="trash"></div><h2 id="delete-title">¿Eliminar este gasto?</h2><p id="delete-description"></p><p class="muted">Se eliminará para los dos. Esta acción no se puede deshacer.</p><p id="delete-error" class="field-error" role="alert" hidden></p><div class="dialog-actions"><button id="cancel-delete" class="secondary-button" type="button" autofocus>Conservar gasto</button><button id="confirm-delete" class="danger-button" type="button">Eliminar gasto</button></div></dialog>
+</body>
+</html>

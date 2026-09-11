@@ -1,0 +1,13 @@
+node_modules/
+.private/
+.runtime/
+.sites-runtime/
+.cache/
+test-results/
+playwright-report/
+*-debug.log
+*-debug.*.log
+.firebase/
+.env
+.env.*
+!.env.example

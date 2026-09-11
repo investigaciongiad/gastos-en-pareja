@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function hasAccess(spaceId) {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'anonymous'
+        && spaceId.matches('^[a-f0-9]{64}$')
+        && exists(/databases/$(database)/documents/espacios/$(spaceId))
+        && get(/databases/$(database)/documents/espacios/$(spaceId)).data.active == true;
+    }
+    function validDate(date) {
+      // Fechas reales, incluidos febrero y años bisiestos. Sin conversión de zona horaria.
+      return date is string && date >= '1900-01-01' && date.matches(
+        '^([0-9]{4}-((01|03|05|07|08|10|12)-(0[1-9]|[12][0-9]|3[01])|(04|06|09|11)-(0[1-9]|[12][0-9]|30)|02-(0[1-9]|1[0-9]|2[0-8]))|([0-9]{2}(0[48]|[2468][048]|[13579][26])|([02468][048]|[13579][26])00)-02-29)$'
+      );
+    }
+    function validExpense(data) {
+      return data.keys().hasAll(['payer', 'amount', 'description', 'category', 'date', 'createdAt', 'updatedAt', 'version'])
+        && data.keys().hasOnly(['payer', 'amount', 'description', 'category', 'date', 'createdAt', 'updatedAt', 'version'])
+        && data.payer in ['lali', 'oscar']
+        && data.amount is int && data.amount > 0 && data.amount <= 999999999999
+        && data.description is string && data.description.size() > 0 && data.description.size() <= 200
+        && data.description.matches('.*[^\\s].*')
+        && data.category in ['mercado', 'comidas', 'vivienda', 'servicios', 'transporte', 'salud', 'ocio', 'otros']
+        && validDate(data.date)
+        && data.createdAt is timestamp && data.updatedAt is timestamp
+        && data.updatedAt == request.time
+        && data.version is int;
+    }
+    match /espacios/{spaceId}/gastos/{expenseId} {
+      allow read: if hasAccess(spaceId);
+      allow create: if hasAccess(spaceId) && validExpense(request.resource.data)
+        && request.resource.data.version == 1 && request.resource.data.createdAt == request.time;
+      allow update: if hasAccess(spaceId) && validExpense(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.version == resource.data.version + 1;
+      allow delete: if hasAccess(spaceId);
+    }
+    // Incluye documentos administrativos, enumeración de espacios y collection-group queries.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

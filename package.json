@@ -1,0 +1,20 @@
+{
+  "name": "gastos-en-pareja",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "node --test tests/domain.test.mjs",
+    "test:rules": "firebase emulators:exec --project demo-gastos-pareja --only firestore \"node --test tests/rules.test.mjs\"",
+    "test:e2e": "firebase emulators:exec --project demo-gastos-pareja --only firestore,auth \"playwright test\"",
+    "setup:link": "node scripts/create-access.mjs"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "5.0.2",
+    "@playwright/test": "1.63.0",
+    "firebase": "12.19.0",
+    "firebase-tools": "15.30.0"
+  }
+}
